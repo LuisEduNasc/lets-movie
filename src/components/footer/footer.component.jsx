@@ -4,7 +4,7 @@ import './footer.style.scss';
 
 const Footer = ({ currentInfo, isMobile }) => {
     return (
-        <div className='footer'>
+        <footer className='footer'>
             <div className="social">
                 <div className="container">
                     <a className="instagram" href="https://www.instagram.com/imdb/" target="_blank"></a>
@@ -34,7 +34,7 @@ const Footer = ({ currentInfo, isMobile }) => {
                 </div>
                 : null
             }
-        </div>
+        </footer>
     )
 }
 

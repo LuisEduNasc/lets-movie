@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import './header.style.scss';
 
-const Header = ({ isMobile }) => {
+const Header = ({ isMobile, searchFor }) => {
     return (
-        <div className='header'>
+        <header className='header'>
             <div className="container">
                 <div className="logo-place">
                     <div className="logo"></div>
@@ -13,11 +13,11 @@ const Header = ({ isMobile }) => {
                     }
                 </div>
                 <div className="search-place">
-                    <input className={`${isMobile ? 'shorter' : ''}`} type="text" placeholder="O que procura?"/>
+                    <input className={`${isMobile ? 'shorter' : ''}`} type="text" placeholder="O que procura?" onChange={searchFor}/>
                     <div className="search"></div>
                 </div>
             </div>
-        </div>
+        </header>
     )
 }
 

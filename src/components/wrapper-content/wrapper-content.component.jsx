@@ -5,7 +5,7 @@ import './wrapper.style.scss';
 
 import Overview from '../overview/overview-component';
 
-const Wrapper = ({isMobile, allProp, movieList, changeBottomDescription}) => {
+const Wrapper = ({isMobile, movieList, changeBottomDescription, getListOfMovies, otherProps}) => {
     const [ nav1, setNav1 ] = useState(null);
     const [ nav2, setNav2 ] = useState(null);
     const [ showOverview, setShowOverview ] = useState(false);
@@ -24,6 +24,9 @@ const Wrapper = ({isMobile, allProp, movieList, changeBottomDescription}) => {
         vertical: true,
         verticalSwiping: true,
         beforeChange: function(currentSlide, nextSlide) {
+            if (nextSlide == movieList.length -1 && otherProps.page < otherProps.total_pages) {
+                getListOfMovies(otherProps.page + 1);
+            }
         },
         afterChange: function(currentSlide) {
           setCurrentMovie(movieList[currentSlide])
@@ -67,7 +70,7 @@ const Wrapper = ({isMobile, allProp, movieList, changeBottomDescription}) => {
 
                             return <div className="movie" key={movie.id}>
                                     <div className="background-img">
-                                        <img src={`https://source.unsplash.com/1280x820/?movies${movie.id}`} alt={movie.title}/>
+                                        <img src={`https://source.unsplash.com/1280x820/?movie-studio${movie.id}`} alt={movie.title}/>
                                     </div>
                                     <div className="center-container">
                                         <div className="left-side">

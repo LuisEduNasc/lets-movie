@@ -13,9 +13,9 @@ class App extends Component {
 
       this.state = {
         movieList: [],
-        allPropOfMovies: null,
         current: null,
         isMobile: false,
+        otherProps: null,
         dimensions: {
           width: 0, 
           height: 0
@@ -24,6 +24,8 @@ class App extends Component {
 
       this.changeBottomDescription = this.changeBottomDescription.bind(this);
       this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+      this.getListOfMovies = this.getListOfMovies.bind(this);
+      this.searchFor = this.searchFor.bind(this);
   }
 
   componentDidMount() {
@@ -43,11 +45,34 @@ class App extends Component {
     });
   }
 
-  getListOfMovies(page = 1) {
+  searchFor(term) {
+    let prepSearchTerm = term.replace(/\s+/g, '+');
+
+    if (prepSearchTerm.length > 1)
+      fetch(`https://api.themoviedb.org/3/search/movie?api_key=fe65f8e840e15d06c5c00bf13084da74&language=pt-BR&query=${prepSearchTerm}`)
+      .then(response => response.json())
+      .then(movies => {
+        if (movies.results.length) {
+          console.log("searchFor -> movies", movies)
+          this.setState({ movieList: movies.results, otherProps: movies });
+        }
+      })
+      .catch(error => console.log('error when fetch movies: ', error));
+    
+    if (!term) {
+      this.getListOfMovies(1, true);
+    }
+  }
+
+  getListOfMovies(page = 1, refresh) {
     fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=fe65f8e840e15d06c5c00bf13084da74&language=pt-BR&page=${page}`)
       .then(response => response.json())
       .then(movies => {
-        this.setState({ movieList: movies.results, allPropOfMovies: movies});
+        if (movies.results.length && !refresh) {
+          this.setState({ movieList: this.state.movieList.concat(movies.results), otherProps: movies });
+        } else if (movies.results.length && refresh) {
+          this.setState({ movieList: movies.results, otherProps: movies });
+        }
       })
       .catch(error => console.log('error when fetch movies: ', error));
   };
@@ -57,17 +82,18 @@ class App extends Component {
   };
 
   render() {
-    const { movieList, allPropOfMovies, current } = this.state;
+    const { movieList, current, otherProps } = this.state;
 
     if (movieList.length) {
       return (
         <div className="App">
-          <Header isMobile={ this.state.isMobile } />
+          <Header isMobile={ this.state.isMobile } searchFor={ e => this.searchFor(e.target.value) }/>
           <Wrapper 
-            isMobile={ this.state.isMobile } 
-            allProp={allPropOfMovies} 
+            isMobile={ this.state.isMobile }
             movieList={movieList} 
             changeBottomDescription={this.changeBottomDescription}
+            getListOfMovies={this.getListOfMovies}
+            otherProps={otherProps}
           />
           <Footer isMobile={ this.state.isMobile } currentInfo={current} />
         </div>
