@@ -53,7 +53,6 @@ class App extends Component {
       .then(response => response.json())
       .then(movies => {
         if (movies.results.length) {
-          console.log("searchFor -> movies", movies)
           this.setState({ movieList: movies.results, otherProps: movies });
         }
       })

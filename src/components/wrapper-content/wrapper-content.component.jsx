@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Fragment } from 'react';
 import Slider from 'react-slick';
+import { useBottomScrollListener } from 'react-bottom-scroll-listener';
 
 import './wrapper.style.scss';
 
@@ -10,6 +11,15 @@ const Wrapper = ({isMobile, movieList, changeBottomDescription, getListOfMovies,
     const [ nav2, setNav2 ] = useState(null);
     const [ showOverview, setShowOverview ] = useState(false);
     const [ currentMovie, setCurrentMovie ] = useState(movieList[0]);
+    const [ scroll, setScroll ] = useState(0);
+
+    useBottomScrollListener(() => scrolledToBottom());
+
+    useEffect(() => {
+        window.addEventListener('scroll', function(e) {
+            setScroll(window.scrollY);
+        });
+    },[])
 
     useEffect(() => {
         changeBottomDescription(currentMovie);
@@ -53,6 +63,18 @@ const Wrapper = ({isMobile, movieList, changeBottomDescription, getListOfMovies,
     const handleMovieClickMobile = (idx) => {
         setCurrentMovie(movieList[idx])
         setShowOverview(true);
+    }
+
+    const scrolledToBottom = () => {
+        isMobile && getListOfMovies(otherProps.page + 1);
+    }
+
+    const scrollToTop = () => {
+        window.scroll({
+            top: 0, 
+            left: 0, 
+            behavior: 'smooth'
+        });
     }
 
     return (
@@ -111,6 +133,9 @@ const Wrapper = ({isMobile, movieList, changeBottomDescription, getListOfMovies,
                                 <h2>{movie.title}</h2>
                             </div>
                         })
+                    }
+                    {
+                        scroll > 10 && <button id="go-to-top" onClick={() => scrollToTop()}></button>
                     }
                 </Fragment>
             }
