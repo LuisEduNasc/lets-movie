@@ -13,8 +13,34 @@ class App extends Component {
 
       this.state = {
         movieList: [],
-        allPropOfMovies: null
+        allPropOfMovies: null,
+        current: null,
+        isMobile: false,
+        dimensions: {
+          width: 0, 
+          height: 0
+        }
       }
+
+      this.changeBottomDescription = this.changeBottomDescription.bind(this);
+      this.updateWindowDimensions = this.updateWindowDimensions.bind(this);
+  }
+
+  componentDidMount() {
+    this.updateWindowDimensions();
+    window.addEventListener('resize', this.updateWindowDimensions);
+    
+    this.getListOfMovies();
+  }
+
+  updateWindowDimensions() {
+    this.setState({ dimensions: {width: window.innerWidth, height: window.innerHeight} }, () => {
+      if(this.state.dimensions.width < 768){
+        this.setState({isMobile: true});
+      } else {
+        this.setState({isMobile: false});
+      }
+    });
   }
 
   getListOfMovies(page = 1) {
@@ -26,19 +52,24 @@ class App extends Component {
       .catch(error => console.log('error when fetch movies: ', error));
   };
 
-  componentDidMount() {
-    this.getListOfMovies();
-  }
+  changeBottomDescription(movie) {
+    this.setState({ current: movie });
+  };
 
   render() {
-    const { movieList, allPropOfMovies } = this.state;
+    const { movieList, allPropOfMovies, current } = this.state;
 
     if (movieList.length) {
       return (
         <div className="App">
-          <Header />
-          <Wrapper allProp={allPropOfMovies} movieList={movieList}/>
-          <Footer />
+          <Header isMobile={ this.state.isMobile } />
+          <Wrapper 
+            isMobile={ this.state.isMobile } 
+            allProp={allPropOfMovies} 
+            movieList={movieList} 
+            changeBottomDescription={this.changeBottomDescription}
+          />
+          <Footer isMobile={ this.state.isMobile } currentInfo={current} />
         </div>
       );  
     } else {

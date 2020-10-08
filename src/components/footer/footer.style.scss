@@ -19,6 +19,10 @@
         height: 100%;
         background: #0c0c0c;
 
+        @media screen and (max-width: 767px) {
+            width: 100%;
+        }
+
         .container {
             display: flex;
             justify-content: space-around;
@@ -26,11 +30,20 @@
             height: 100%;
             padding: 0 22px;
 
-            > div {
+            @media screen and (max-width: 767px) {
+                justify-content: center;
+            }
+
+            > a {
                 display: block;
                 width: 24px;
                 height: 24px;
                 background-size: 100%;
+                cursor: pointer;
+
+                @media screen and (max-width: 767px) {
+                    margin: 0 22px;
+                }
     
                 &.instagram {
                     background: url('../../assets/svg/instagram-icon.svg') no-repeat center;
@@ -47,5 +60,17 @@
         width: 85vw;
         height: 100%;
         background: #FFF;
+        display: flex;
+        align-items: center;
+
+        .container {
+            width: 100%;
+            justify-content: space-around;
+            font-size: 22px;
+
+            .title {
+                font-weight: 800;
+            }
+        }
     }
 }
